@@ -2,8 +2,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-COLUMN_WIDTH = 3.5
-COLUMN_HEIGHT = 2 * COLUMN_WIDTH / (1 + 5 ** 0.5)
+SUBPLOT_WIDTH = 6.4
+SUBPLOT_HEIGHT = 4.8
 
 PLOT_PARAMS = {
     "figure.dpi": 120,
