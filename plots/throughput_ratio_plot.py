@@ -1,14 +1,14 @@
-#!/usr/bin/env python3
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from plot_config import apply_plot_style, get_cmap, COLUMN_WIDTH, COLUMN_HEIGHT
+from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGHT
 
 apply_plot_style()
 
 
-df = pd.read_csv("summaryallsta.csv")
+df = pd.read_csv("../data/throughput-db-stations-ratio.csv")
+
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
     "True": True,
@@ -19,13 +19,19 @@ df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
 df["totalSta"] = df["nDbWifi"] + df["nEbWifi"]
 df["fractionDb"] = df["nDbWifi"] / df["totalSta"]
 
+
 df.loc[df["nDbWifi"] == 0, "throughputBSS_DB"] = np.nan
 df.loc[df["nEbWifi"] == 0, "throughputBSS_EB"] = np.nan
 
 totals = [5, 10, 20, 40]
 colors = get_cmap(4)
 
-fig, axes = plt.subplots(2, 2, figsize=(2 * COLUMN_WIDTH, 2 * COLUMN_HEIGHT + 0.8))
+nrows, ncols = 2, 2
+fig, axes = plt.subplots(
+    nrows,
+    ncols,
+    figsize=(ncols * SUBPLOT_WIDTH, nrows * SUBPLOT_HEIGHT)
+)
 axes = axes.flatten()
 
 for i, total in enumerate(totals):
@@ -41,7 +47,7 @@ for i, total in enumerate(totals):
         color=colors[0],
         marker="o",
         zorder=3,
-        label="DB, RTS on" if i == 0 else None,
+        label="DB, RTS on",
     )
 
     ax.plot(
@@ -50,7 +56,7 @@ for i, total in enumerate(totals):
         color=colors[1],
         marker="s",
         zorder=3,
-        label="DB, RTS off" if i == 0 else None,
+        label="DB, RTS off",
     )
 
     ax.plot(
@@ -59,7 +65,7 @@ for i, total in enumerate(totals):
         color=colors[2],
         marker="o",
         zorder=3,
-        label="EB, RTS on" if i == 0 else None,
+        label="EB, RTS on",
     )
 
     ax.plot(
@@ -68,7 +74,7 @@ for i, total in enumerate(totals):
         color=colors[3],
         marker="s",
         zorder=3,
-        label="EB, RTS off" if i == 0 else None,
+        label="EB, RTS off",
     )
 
     ax.set_title(f"{total} STAs")
@@ -83,23 +89,26 @@ for i, total in enumerate(totals):
 
     ax.grid(True, zorder=0)
 
+""" fig.subplots_adjust(
+    left=0.08,
+    right=0.98,
+    top=0.9,
+    bottom=0.1,
+    wspace=0.22,
+    hspace=0.28,
+) """
+
+
+fig.suptitle("Throughput vs fraction of DB STAs for 5, 10, 20 and 40 stations, IEEE 802.11ax, MCS 11, 20 MHz, GI 800 ns, payload 1450 B, offered load 150 Mb/s per station,staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s")
+
 handles, labels = axes[0].get_legend_handles_labels()
 fig.legend(
     handles,
     labels,
-    loc='center',
+    loc='lower center',
     ncol=2,
     frameon=True,
-    bbox_to_anchor=(0.5, 0.1),
-)
-
-fig.subplots_adjust(
-    left=0.09,
-    right=0.98,
-    top=0.95,
-    bottom=0.18,
-    wspace=0.28,
-    hspace=0.38,
+    #bbox_to_anchor=(0.5, 0.01)
 )
 
 plt.show()
