@@ -7,7 +7,7 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-DATA_DIR = Path("../data/txop")
+DATA_DIR = Path("../data/txop_19_03_2026")
 
 N_DB = 12
 N_EB = 8
@@ -15,14 +15,14 @@ GAP_SECONDS = 1
 WARMUP_SECONDS = 30
 X_UNIT = "ms"
 
+N_DB = 5
+N_EB = 0
 FILES = [
-    ("txop-trace-db-12-8-1.csv", "DB, RTS on"),
-    ("txop-trace-db-12-8-0.csv", "DB, RTS off"),
-    ("txop-trace-eb-12-8-1.csv", "EB, RTS on"),
-    ("txop-trace-eb-12-8-0.csv", "EB, RTS off"),
+    ("txop-trace-db-5-0-1.csv", "DB, RTS ON"),
+    ("txop-trace-db-5-0-0.csv", "DB, RTS OFF"),
 ]
 
-OUTPUT_FILE = "ccdf_access_delay_12_8.png"
+output_file = f"ccdf_nDb{N_DB}_nEb{N_EB}.png"
 
 
 def get_unit_divisor(unit):
@@ -112,7 +112,7 @@ for (filename, label), color in zip(FILES, colors):
         zorder=3,
         label=label,
     )
-
+ax.set_xlim(0, 900)
 ax.set_yscale("log")
 ax.set_xlabel(f"Channel access delay [{X_UNIT}]")
 ax.set_ylabel("CCDF")
@@ -122,13 +122,13 @@ ax.set_yticks([1, 1e-1, 1e-2, 1e-3, 1e-4])
 ax.set_yticklabels(["P0", "P90", "P99", "P99.9", "P99.99"])
 
 fig.suptitle(
-    "CCDF of channel access delay for" f"{N_DB + N_EB} STAs ({N_DB} DB, {N_EB} EB)" "stations with RTS on/off, "
-    "IEEE 802.11ax, MCS 11, 20 MHz, GI 800 ns, payload 1450 B, "
-    "offered load 150 Mb/s per station, staggered startup (1 STA/s), "
-    "warm-up 30 s after the last start, total simulation time 200 s"
+    "CCDF of channel access delay for " f"{N_DB + N_EB} STAs ({N_DB} DB, {N_EB} EB)" "stations with RTS on/off, \n"
+    "IEEE 802.11ax, MCS 11, 20 MHz, GI 800 ns, payload 1450 B, \n"
+    "offered load 150 Mb/s per station, staggered startup (1 STA/s), \n"
+    "warm-up 30 s after the last start, total simulation time 200 s",
 )
 
-
-fig.legend()
-fig.tight_layout(rect=[0, 0.08, 1, 0.92])
+fig.tight_layout()
+ax.legend(loc ='best')
+plt.savefig(output_file)
 plt.show()

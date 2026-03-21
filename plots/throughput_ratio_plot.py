@@ -6,8 +6,7 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-
-df = pd.read_csv("../data/throughput-db-stations-ratio.csv")
+df = pd.read_csv("../data/throughput-db-stations-ratio_19_03.csv")
 
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
@@ -43,46 +42,46 @@ for i, total in enumerate(totals):
 
     ax.plot(
         d_rts_on["fractionDb"],
-        d_rts_on["throughputBSS_DB"],
+        d_rts_on["throughputBSS_DB"] / d_rts_on["nDbWifi"].replace(0, np.nan),
         color=colors[0],
         marker="o",
         zorder=3,
-        label="DB, RTS on",
+        label="DB, RTS/CTS ON",
     )
 
     ax.plot(
         d_rts_off["fractionDb"],
-        d_rts_off["throughputBSS_DB"],
+        d_rts_off["throughputBSS_DB"] / d_rts_off["nDbWifi"].replace(0, np.nan),
         color=colors[1],
         marker="s",
         zorder=3,
-        label="DB, RTS off",
+        label="DB, RTS/CTS OFF",
     )
 
     ax.plot(
         d_rts_on["fractionDb"],
-        d_rts_on["throughputBSS_EB"],
+        d_rts_on["throughputBSS_EB"]/d_rts_on["nEbWifi"].replace(0, np.nan),
         color=colors[2],
         marker="o",
         zorder=3,
-        label="EB, RTS on",
+        label="EB, RTS/CTS ON",
     )
 
     ax.plot(
         d_rts_off["fractionDb"],
-        d_rts_off["throughputBSS_EB"],
+        d_rts_off["throughputBSS_EB"]/d_rts_off["nEbWifi"].replace(0, np.nan),
         color=colors[3],
         marker="s",
         zorder=3,
-        label="EB, RTS off",
+        label="EB, RTS/OFF",
     )
 
     ax.set_title(f"{total} STAs")
     ax.set_xlabel("Fraction of DB STAs")
-    ax.set_ylabel("Throughput [Mbit/s]")
+    ax.set_ylabel("Throughput per station [Mbit/s]")
 
     ax.set_xlim(0, 1)
-    ax.set_ylim(0, 130)
+    #ax.set_ylim(0, 40)
 
     ax.set_xticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     ax.set_xticklabels(["0", "0.2", "0.4", "0.6", "0.8", "1"])
@@ -99,7 +98,7 @@ for i, total in enumerate(totals):
 ) """
 
 
-fig.suptitle("Throughput vs fraction of DB STAs for 5, 10, 20 and 40 stations, IEEE 802.11ax, MCS 11, 20 MHz, GI 800 ns, payload 1450 B, offered load 150 Mb/s per station,staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s")
+fig.suptitle("Throughput per station vs fraction of DB STAs for 5, 10, 20 and 40 stations, IEEE 802.11ax, MCS 11,Channel width 20 MHz, GI 800 ns, payload 1450 B,\n offered load 150 Mb/s per station, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s")
 
 handles, labels = axes[0].get_legend_handles_labels()
 fig.legend(
@@ -110,5 +109,5 @@ fig.legend(
     frameon=True,
     #bbox_to_anchor=(0.5, 0.01)
 )
-
+#plt.savefig("throughput_ratio.png")
 plt.show()
