@@ -6,7 +6,7 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-df = pd.read_csv("../data/throughput-db-stations-ratio_19_03.csv")
+df = pd.read_csv("../data/throughput-db-stations-ratio_23_03.csv")
 
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
@@ -87,6 +87,11 @@ for i, total in enumerate(totals):
     ax.set_xticklabels(["0", "0.2", "0.4", "0.6", "0.8", "1"])
 
     ax.grid(True, zorder=0)
+    ax.legend (
+        loc="best",
+        ncol=1,
+        frameon=True,
+    )
 
 """ fig.subplots_adjust(
     left=0.08,
@@ -101,13 +106,13 @@ for i, total in enumerate(totals):
 fig.suptitle("Throughput per station vs fraction of DB STAs for 5, 10, 20 and 40 stations, IEEE 802.11ax, MCS 11,Channel width 20 MHz, GI 800 ns, payload 1450 B,\n offered load 150 Mb/s per station, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s")
 
 handles, labels = axes[0].get_legend_handles_labels()
-fig.legend(
+"""fig.legend(
     handles,
     labels,
     loc='lower center',
     ncol=2,
     frameon=True,
     #bbox_to_anchor=(0.5, 0.01)
-)
+)"""
 #plt.savefig("throughput_ratio.png")
 plt.show()
