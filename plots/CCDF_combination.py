@@ -7,12 +7,13 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-DATA_DIR = Path("../data/txop_23_03_2026")
-TOTAL_STA = 40
+DATA_DIR = Path("../data/10_2ipt/txop_21_03_2026")
+TOTAL_STA = 5
 GAP_SECONDS = 1
 WARMUP_SECONDS = 30
 X_UNIT = "ms"
-X_LIM = (0, 14000) # 5 - 2000; 10 - 3200; 20 - 6000; 40 - 14000 
+X_LIM = (0, 30000) # 5 - 2000; 10 - 3200; 20 - 6000; 40 - 14000 
+
 #configs = [(0, 5), (1, 4), (2, 3), (3, 2), (4, 1), (5, 0)]  # 5 STAs
 #configs = [(0, 10), (2, 8), (4, 6), (6, 4), (8, 2), (10, 0)]  # 10 STAs
 #configs = [(0, 20), (4, 16), (8, 12), (12, 8), (16, 4), (20, 0)]  # 20 STAs
