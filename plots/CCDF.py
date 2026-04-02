@@ -88,7 +88,7 @@ for (filename, label), color in zip(FILES, colors):
     path = DATA_DIR / filename
 
     if not path.exists():
-        print(f"Brak pliku: {path}")
+        print(f"No file: {path}")
         continue
 
     delays = load_delays(
@@ -101,7 +101,7 @@ for (filename, label), color in zip(FILES, colors):
     )
 
     if len(delays) == 0:
-        print(f"Brak poprawnych danych po filtracji: {filename}")
+        print(f"Dont have proper data in files: {filename}")
         continue
 
     x, y = compute_ccdf(delays)

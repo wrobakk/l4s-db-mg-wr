@@ -7,7 +7,7 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-df = pd.read_csv("../data/8_15ipt/throughput-db-stations-ratio_28_03.csv")
+df = pd.read_csv("../data/10_15ipt/throughput-db-stations-ratio_1_04.csv")
 
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
