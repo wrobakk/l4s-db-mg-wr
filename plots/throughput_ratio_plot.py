@@ -7,7 +7,7 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-df = pd.read_csv("../data/7_15ipt/througput_7_15_ipt.csv")
+df = pd.read_csv("../data/7_15ipt/throughput.csv")
 
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
@@ -100,7 +100,7 @@ for i, total in enumerate(totals):
 
 
 fig.suptitle("Throughput per station vs fraction of DB STAs for 5, 10, 20 and 40 stations, IEEE 802.11ax, MCS 11,Channel width 20 MHz, GI 800 ns, payload 1450 B,\n offered load 150 Mb/s per station, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s\n"
-             "\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$")
+             "\n$\\mathbf{Deterministic \\: backoff = 7 + 1.5*ipt}$")
 
 handles, labels = axes[0].get_legend_handles_labels()
 """fig.legend(
