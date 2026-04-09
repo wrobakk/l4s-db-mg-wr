@@ -3,6 +3,8 @@ nDbWifi,nEbWifi,simulationTime,enableRts,throughputBSS_DB,throughputBSS_EB
 0,5,200,False,0.0,108.746
 1,4,200,True,26.8843,95.2234
 1,4,200,False,24.1976,84.671
+2,3,200,True,54.7874,67.4432
+2,3,200,False,49.2972,61.6455
 3,2,200,True,80.6241,41.8238
 3,2,200,False,75.6979,39.4532
 4,1,200,True,105.062,17.675
