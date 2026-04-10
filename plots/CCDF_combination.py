@@ -7,10 +7,10 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-DATA_DIR = Path("../data/10_15ipt/txop_1_04_2026")
+DATA_DIR = Path("../data/before_patches/6_15ipt/txop_03_04_2026")
 TOTAL_STA = 40
 GAP_SECONDS = 1
-WARMUP_SECONDS =50
+WARMUP_SECONDS =30
 X_UNIT = "ms"
 X_LIM = (0, 7000) # 5 - 2000; 10 - 3500; 20 - 6000; 40 - 14000 
 
@@ -159,9 +159,8 @@ for ax, (n_db, n_eb) in zip(axes, configs):
 
 
 fig.suptitle(
-    "CCDF of channel access delay for "f"{TOTAL_STA}" " stations IEEE 802.11ax, MCS 11, channel width 20 MHz, GI 800 ns, payload 1450 B,\n"
-    "offered load 150 Mb/s per station, staggered startup (1 STA/s), warm-up 50 s after the last start, total simulation time 200 s, \n"
-    "\n$\\mathbf{Deterministic \\: backoff = 10 + 1.5*ipt}$"
+    "CCDF of channel access delay for "f"{TOTAL_STA}" " stations, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s, \n"
+    "\n$\\mathbf{Deterministic \\: backoff = 6 + 1.5*ipt}$"
 )
 
 

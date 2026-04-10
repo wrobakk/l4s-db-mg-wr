@@ -53,9 +53,9 @@ ax.plot(
     marker="s", color=colors[3], label="Single EB, RTS/CTS OFF", zorder=3
 )
 
-ax.set_title("Minority station throughput vs total number of STAs")
+ax.set_title("Single station throughput vs total number of STAs")
 ax.set_xlabel("Total number of STAs")
-ax.set_ylabel("Throughput of the single minority station [Mbit/s]")
+ax.set_ylabel("Single station throughput [Mbit/s]")
 
 ax.set_xticks([2, 4, 8, 16, 24])
 ax.set_xlim(1.5, 24.5)
