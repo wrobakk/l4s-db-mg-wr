@@ -7,17 +7,17 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-DATA_DIR = Path("../data/10_15ipt/txop_11_04")
-TOTAL_STA = 5
+DATA_DIR = Path("../data/9_15ipt/txop_20_04")
+TOTAL_STA = 40
 GAP_SECONDS = 1
 WARMUP_SECONDS =30
 X_UNIT = "ms"
-X_LIM = (0, 2500) # 5 - 2000; 10 - 3500; 20 - 6000; 40 - 14000 
+X_LIM = (0, 7000) # 5 - 2000; 10 - 3500; 20 - 6000; 40 - 14000 
 
-configs = [(0, 5), (1, 4), (2, 3), (3, 2), (4, 1), (5, 0)]  # 5 STAs
+#configs = [(0, 5), (1, 4), (2, 3), (3, 2), (4, 1), (5, 0)]  # 5 STAs
 #configs = [(0, 10), (2, 8), (4, 6), (6, 4), (8, 2), (10, 0)]  # 10 STAs
 #configs = [(0, 20), (4, 16), (8, 12), (12, 8), (16, 4), (20, 0)]  # 20 STAs
-#configs = [(0, 40), (8, 32), (16, 24), (24, 16), (32, 8), (40, 0)]  # 40 STAs
+configs = [(0, 40), (8, 32), (16, 24), (24, 16), (32, 8), (40, 0)]  # 40 STAs
 
 colors = {
     "DB, RTS ON": get_cmap(4)[0],
@@ -160,7 +160,7 @@ for ax, (n_db, n_eb) in zip(axes, configs):
 
 fig.suptitle(
     "CCDF of channel access delay for "f"{TOTAL_STA}" " stations, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s, \n"
-    "\n$\\mathbf{Deterministic \\: backoff = 10 + 1.5*ipt}$"
+    "\n$\\mathbf{Deterministic \\: backoff = 9 + 1.5*ipt}$"
 )
 
 
