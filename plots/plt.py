@@ -7,7 +7,7 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-df = pd.read_csv("../data/7_15ipt/singlestation.csv")
+df = pd.read_csv("../data/10_15ipt/singlestation.csv")
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
     "True": True,
@@ -75,7 +75,7 @@ ax.grid(True, which="minor", alpha=0.3, zorder=0)
 ax.legend(loc="best", frameon=True)
 
 fig.suptitle(
-    "$\\mathbf{Deterministic \\: backoff = 7 + 1.5*ipt}$"
+    "$\\mathbf{Deterministic \\: backoff = 10 + 1.5*ipt}$"
 )
 
 plt.tight_layout()

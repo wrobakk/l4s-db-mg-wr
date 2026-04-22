@@ -7,7 +7,7 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-df = pd.read_csv("../data/before_patches/6_15ipt/throughput.csv")
+df = pd.read_csv("../data/10_15ipt/throughput.csv")
 
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
@@ -38,15 +38,13 @@ for i, total in enumerate(totals):
     ax = axes[i]
     d = df[df["totalSta"] == total].copy()
 
-    # Obliczanie throughput per station dla wszystkich serii, aby znaleźć max_val
+
     y1 = d["throughputBSS_DB"] / d["nDbWifi"].replace(0, np.nan)
     y2 = d["throughputBSS_EB"] / d["nEbWifi"].replace(0, np.nan)
     
-    # Wyznaczenie maksymalnej wartości w aktualnym subplocie (ignorując NaN)
     current_max = np.nanmax([y1.max(), y2.max()])
     
-    # Zaokrąglenie w górę do najbliższej wielokrotności 5
-    # Dodajemy mały margines (np. +1), aby punkty nie dotykały samej góry ramki
+
     y_limit = 5 * np.ceil((current_max + 1) / 5)
     
     d_rts_on = d[d["enableRts"] == True].sort_values("fractionDb")
@@ -100,7 +98,7 @@ for i, total in enumerate(totals):
 
 
 fig.suptitle("Throughput per station vs fraction of DB STAs for 5, 10, 20 and 40 stations, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s\n"
-             "\n$\\mathbf{Deterministic \\: backoff = 6 + 1.5*ipt}$")
+             "\n$\\mathbf{Deterministic \\: backoff = 10 + 1.5*ipt}$")
 
 handles, labels = axes[0].get_legend_handles_labels()
 """fig.legend(
