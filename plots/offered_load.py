@@ -109,6 +109,6 @@ fig.suptitle(
 
 fig.tight_layout(rect=[0, 0.0, 1, 0.95])
 
-output_file = "throughput_per_station_vs_offered_load_5sta_all_ratios.png"
+output_file = "results/throughput_per_station_vs_offered_load_5sta_all_ratios.png"
 fig.savefig(output_file, dpi=300, bbox_inches="tight")
 plt.show()

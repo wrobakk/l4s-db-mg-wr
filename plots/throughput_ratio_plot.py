@@ -109,5 +109,5 @@ handles, labels = axes[0].get_legend_handles_labels()
     frameon=True,
     #bbox_to_anchor=(0.5, 0.01)
 )"""
-plt.savefig("throughput_ratio.svg")
+plt.savefig("results/throughput_ratio.svg")
 plt.show()

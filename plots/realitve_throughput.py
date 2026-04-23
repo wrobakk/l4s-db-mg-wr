@@ -81,5 +81,5 @@ fig.suptitle(
 )
 
 plt.tight_layout()
-plt.savefig("minority_station_relative_throughput.png", dpi=300, bbox_inches="tight")
+plt.savefig("results/minority_station_relative_throughput.png", dpi=300, bbox_inches="tight")
 plt.show()

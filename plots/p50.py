@@ -113,7 +113,7 @@ for n_db, n_eb in configs:
 
 results_df = pd.DataFrame(rows)
 
-output_csv = f"p90_channel_access_delay_{TOTAL_STA}sta.csv"
+output_csv = f"results/p90_channel_access_delay_{TOTAL_STA}sta.csv"
 results_df.to_csv(output_csv, index=False)
 
 print(results_df)

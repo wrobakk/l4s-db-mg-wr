@@ -23,7 +23,7 @@ FILES = [
     #("txop-trace-eb-0-5-0.csv", "EB, RTS OFF"),
 ]
 
-output_file = f"ccdf_nDb{N_DB}_nEb{N_EB}.svg"
+output_file = f"results/ccdf_nDb{N_DB}_nEb{N_EB}.svg"
 colors = get_colors()
 
 

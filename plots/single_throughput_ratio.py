@@ -119,6 +119,6 @@ fig.suptitle(
 
 fig.tight_layout(rect=[0, 0.08, 1, 0.93])
 
-output_file = f"throughput_ratio_{TOTAL_STA}sta.svg"
+output_file = f"results/throughput_ratio_{TOTAL_STA}sta.svg"
 fig.savefig(output_file, dpi=300, bbox_inches="tight")
 plt.show()

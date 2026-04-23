@@ -163,6 +163,6 @@ for ax, (n_db, n_eb) in zip(axes, configs):
 
 #fig.tight_layout(rect=[0, 0.08, 1, 0.93])
 
-output_file = f"ccdf_{TOTAL_STA}sta_all_ratios.svg"
+output_file = f"results/ccdf_{TOTAL_STA}sta_all_ratios.svg"
 fig.savefig(output_file, dpi=300, bbox_inches="tight")
 plt.show()
