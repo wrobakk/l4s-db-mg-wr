@@ -14,13 +14,13 @@ WARMUP_SECONDS = 30
 X_UNIT = "ms"
 X_LIM = (0, 2000)  # Limit for single station config
 
-N_DB = 3
-N_EB = 2
+N_DB = 5
+N_EB = 5
 FILES = [
-    ("txop-trace-db-4-1-1.csv", "DB, RTS ON"),
-    ("txop-trace-db-4-1-0.csv", "DB, RTS OFF"),
-    ("txop-trace-eb-4-1-1.csv", "EB, RTS ON"),
-    ("txop-trace-eb-4-1-0.csv", "EB, RTS OFF"),
+    ("txop-trace-db-5-0-1.csv", "DB, RTS ON"),
+    #("txop-trace-db-5-0-0.csv", "DB, RTS OFF"),
+    ("txop-trace-eb-0-5-1.csv", "EB, RTS ON"),
+    #("txop-trace-eb-0-5-0.csv", "EB, RTS OFF"),
 ]
 
 output_file = f"ccdf_nDb{N_DB}_nEb{N_EB}.svg"

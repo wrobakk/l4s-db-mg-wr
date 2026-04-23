@@ -7,7 +7,7 @@ from plot_config import apply_plot_style, get_colors, SUBPLOT_WIDTH, SUBPLOT_HEI
 
 apply_plot_style()
 
-df = pd.read_csv("../data/9_15ipt/throughput.csv")
+df = pd.read_csv("../data/8_15ipt/throughput.csv")
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
     "True": True,
@@ -113,8 +113,8 @@ ax.legend(
 fig.suptitle(
     "Throughput per station vs fraction of DB STAs for "
     f"{TOTAL_STA} STA\n"
-    "staggered startup (1 STA/s), warm-up 30 s after the last start, \ntotal simulation time 200 s, \n"
-    "\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$"
+    #"staggered startup (1 STA/s), warm-up 30 s after the last start, \ntotal simulation time 200 s, \n"
+    #"\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$"
 )
 
 fig.tight_layout(rect=[0, 0.08, 1, 0.93])

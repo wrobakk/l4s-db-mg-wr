@@ -3,28 +3,23 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGHT
+from plot_config import apply_plot_style, get_cmap, get_colors, SUBPLOT_WIDTH, SUBPLOT_HEIGHT
 
 apply_plot_style()
 
-DATA_DIR = Path("../data/9_15ipt/txop_20_04")
-TOTAL_STA = 40
+DATA_DIR = Path("../data/8_15ipt/txop_08_04")
+TOTAL_STA = 5
 GAP_SECONDS = 1
 WARMUP_SECONDS =30
 X_UNIT = "ms"
-X_LIM = (0, 7000) # 5 - 2000; 10 - 3500; 20 - 6000; 40 - 14000 
+X_LIM = (0, 2000) # 5 - 2000; 10 - 3500; 20 - 6000; 40 - 14000 
 
-#configs = [(0, 5), (1, 4), (2, 3), (3, 2), (4, 1), (5, 0)]  # 5 STAs
+configs = [(1, 4), (2, 3), (3, 2), (4, 1)]  # 5 STAs
 #configs = [(0, 10), (2, 8), (4, 6), (6, 4), (8, 2), (10, 0)]  # 10 STAs
 #configs = [(0, 20), (4, 16), (8, 12), (12, 8), (16, 4), (20, 0)]  # 20 STAs
-configs = [(0, 40), (8, 32), (16, 24), (24, 16), (32, 8), (40, 0)]  # 40 STAs
+#configs = [(0, 40), (8, 32), (16, 24), (24, 16), (32, 8), (40, 0)]  # 40 STAs
 
-colors = {
-    "DB, RTS ON": get_cmap(4)[0],
-    "DB, RTS OFF": get_cmap(4)[1],
-    "EB, RTS ON": get_cmap(4)[2],
-    "EB, RTS OFF": get_cmap(4)[3],
-}
+colors = get_colors()
 
 
 def get_unit_divisor(unit):
@@ -86,19 +81,19 @@ def build_files(n_db, n_eb):
     files = []
 
     if n_db > 0:
-        files.append((f"txop-trace-db-{n_db}-{n_eb}-1.csv", "DB, RTS ON"))
+       # files.append((f"txop-trace-db-{n_db}-{n_eb}-1.csv", "DB, RTS ON"))
         files.append((f"txop-trace-db-{n_db}-{n_eb}-0.csv", "DB, RTS OFF"))
 
     if n_eb > 0:
-        files.append((f"txop-trace-eb-{n_db}-{n_eb}-1.csv", "EB, RTS ON"))
+        #files.append((f"txop-trace-eb-{n_db}-{n_eb}-1.csv", "EB, RTS ON"))
         files.append((f"txop-trace-eb-{n_db}-{n_eb}-0.csv", "EB, RTS OFF"))
 
     return files
 
 
 fig, axes = plt.subplots(
-    2, 3,
-    figsize=(3 * SUBPLOT_WIDTH, 2.6 * SUBPLOT_HEIGHT),
+    2, 2,
+    figsize=(2 * SUBPLOT_WIDTH, 2 * SUBPLOT_HEIGHT),
 )
 axes = axes.flatten()
 
@@ -142,7 +137,8 @@ for ax, (n_db, n_eb) in zip(axes, configs):
     ax.set_title(f"{n_db} DB, {n_eb} EB")
     ax.set_yscale("log")
     ax.set_xlim(*X_LIM)
-    ax.grid(True, which="both", zorder=0)
+    ax.minorticks_off()
+    ax.grid(True, which="major", axis="y", zorder=0)
 
     ax.set_yticks([1, 1e-1, 1e-2, 1e-3, 1e-4])
     ax.set_yticklabels(["P0", "P90", "P99", "P99.9", "P99.99"])
@@ -158,15 +154,15 @@ for ax, (n_db, n_eb) in zip(axes, configs):
 )
 
 
-fig.suptitle(
-    "CCDF of channel access delay for "f"{TOTAL_STA}" " stations, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s, \n"
-    "\n$\\mathbf{Deterministic \\: backoff = 9 + 1.5*ipt}$"
-)
+#fig.suptitle(
+ #   "CCDF of channel access delay for "f"{TOTAL_STA}" " stations, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s, \n"
+ #   "\n$\\mathbf{Deterministic \\: backoff = 9 + 1.5*ipt}$"
+#)
 
 
 
-fig.tight_layout(rect=[0, 0.08, 1, 0.95])
+#fig.tight_layout(rect=[0, 0.08, 1, 0.93])
 
-output_file = f"ccdf_{TOTAL_STA}sta_all_ratios.png"
+output_file = f"ccdf_{TOTAL_STA}sta_all_ratios.svg"
 fig.savefig(output_file, dpi=300, bbox_inches="tight")
 plt.show()

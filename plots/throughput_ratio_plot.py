@@ -7,7 +7,7 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
-df = pd.read_csv("../data/9_15ipt/throughput.csv")
+df = pd.read_csv("../data/8_15ipt/throughput.csv")
 
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
@@ -50,11 +50,11 @@ for i, total in enumerate(totals):
     d_rts_on = d[d["enableRts"] == True].sort_values("fractionDb")
     d_rts_off = d[d["enableRts"] == False].sort_values("fractionDb")
 
-    ax.plot(
-        d_rts_on["fractionDb"],
-        d_rts_on["throughputBSS_DB"] / d_rts_on["nDbWifi"].replace(0, np.nan),
-        color=colors[0], marker="o", zorder=3, label="DB, RTS/CTS ON",
-    )
+    # ax.plot(
+    #     d_rts_on["fractionDb"],
+    #     d_rts_on["throughputBSS_DB"] / d_rts_on["nDbWifi"].replace(0, np.nan),
+    #     color=colors[0], marker="o", zorder=3, label="DB, RTS/CTS ON",
+    # )
 
     ax.plot(
         d_rts_off["fractionDb"],
@@ -62,11 +62,11 @@ for i, total in enumerate(totals):
         color=colors[1], marker="s", zorder=3, label="DB, RTS/CTS OFF",
     )
 
-    ax.plot(
-        d_rts_on["fractionDb"],
-        d_rts_on["throughputBSS_EB"] / d_rts_on["nEbWifi"].replace(0, np.nan),
-        color=colors[2], marker="o", zorder=3, label="EB, RTS/CTS ON",
-    )
+    # ax.plot(
+    #     d_rts_on["fractionDb"],
+    #     d_rts_on["throughputBSS_EB"] / d_rts_on["nEbWifi"].replace(0, np.nan),
+    #     color=colors[2], marker="o", zorder=3, label="EB, RTS/CTS ON",
+    # )
 
     ax.plot(
         d_rts_off["fractionDb"],
@@ -98,7 +98,7 @@ for i, total in enumerate(totals):
 
 
 fig.suptitle("Throughput per station vs fraction of DB STAs for 5, 10, 20 and 40 stations, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s\n"
-             "\n$\\mathbf{Deterministic \\: backoff = 9 + 1.5*ipt}$")
+             "\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$")
 
 handles, labels = axes[0].get_legend_handles_labels()
 """fig.legend(
@@ -109,5 +109,5 @@ handles, labels = axes[0].get_legend_handles_labels()
     frameon=True,
     #bbox_to_anchor=(0.5, 0.01)
 )"""
-plt.savefig("throughput_ratio.png")
+plt.savefig("throughput_ratio.svg")
 plt.show()

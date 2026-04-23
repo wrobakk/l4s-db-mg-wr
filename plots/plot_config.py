@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-SUBPLOT_WIDTH = 6.4
+SUBPLOT_WIDTH = 5.5
 SUBPLOT_HEIGHT = 4.8
 
 PLOT_PARAMS = {
@@ -28,3 +28,13 @@ def apply_plot_style():
 
 def get_cmap(n: int):
     return plt.cm.viridis(np.linspace(0.0, 0.8, n))
+
+def get_colors():
+    """Returns a dictionary of colors aligned with get_cmap() viridis palette"""
+    cmap = get_cmap(4)
+    return {
+        "DB, RTS ON": cmap[0],
+        "DB, RTS OFF": cmap[1],
+        "EB, RTS ON": cmap[2],
+        "EB, RTS OFF": cmap[3],
+    }
