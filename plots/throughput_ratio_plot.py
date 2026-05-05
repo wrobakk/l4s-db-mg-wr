@@ -25,6 +25,7 @@ df.loc[df["nEbWifi"] == 0, "throughputBSS_EB"] = np.nan
 
 totals = [5, 10, 20, 40]
 colors = get_cmap(4)
+y_locators = [5, 3, 2, 1]  # Different MultipleLocator per subplot: total=5, 10, 20, 40
 
 nrows, ncols = 2, 2
 fig, axes = plt.subplots(
@@ -50,64 +51,72 @@ for i, total in enumerate(totals):
     d_rts_on = d[d["enableRts"] == True].sort_values("fractionDb")
     d_rts_off = d[d["enableRts"] == False].sort_values("fractionDb")
 
-    # ax.plot(
-    #     d_rts_on["fractionDb"],
-    #     d_rts_on["throughputBSS_DB"] / d_rts_on["nDbWifi"].replace(0, np.nan),
-    #     color=colors[0], marker="o", zorder=3, label="DB, RTS/CTS ON",
-    # )
-
     ax.plot(
-        d_rts_off["fractionDb"],
-        d_rts_off["throughputBSS_DB"] / d_rts_off["nDbWifi"].replace(0, np.nan),
-        color=colors[1], marker="s", zorder=3, label="DB, RTS/CTS OFF",
+        d_rts_on["fractionDb"],
+        d_rts_on["throughputBSS_DB"] / d_rts_on["nDbWifi"].replace(0, np.nan),
+        color=colors[0], marker="o", zorder=3, label="DB, RTS/CTS ON",
     )
 
     # ax.plot(
-    #     d_rts_on["fractionDb"],
-    #     d_rts_on["throughputBSS_EB"] / d_rts_on["nEbWifi"].replace(0, np.nan),
-    #     color=colors[2], marker="o", zorder=3, label="EB, RTS/CTS ON",
+    #     d_rts_off["fractionDb"],
+    #     d_rts_off["throughputBSS_DB"] / d_rts_off["nDbWifi"].replace(0, np.nan),
+    #     color=colors[1], marker="s", zorder=3, label="DB, RTS/CTS OFF",
     # )
 
+   
+
     ax.plot(
-        d_rts_off["fractionDb"],
-        d_rts_off["throughputBSS_EB"] / d_rts_off["nEbWifi"].replace(0, np.nan),
-        color=colors[3], marker="s", zorder=3, label="EB, RTS/CTS OFF",
+        d_rts_on["fractionDb"],
+        d_rts_on["throughputBSS_EB"] / d_rts_on["nEbWifi"].replace(0, np.nan),
+        color=colors[2], marker="o", zorder=3, label="EB, RTS/CTS ON",
     )
 
-    ax.set_title(f"{total} STAs")
+    # ax.plot(
+    #     d_rts_off["fractionDb"],
+    #     d_rts_off["throughputBSS_EB"] / d_rts_off["nEbWifi"].replace(0, np.nan),
+    #     color=colors[3], marker="s", zorder=3, label="EB, RTS/CTS OFF",
+    # )
+    
     ax.set_xlabel("Fraction of DB STAs")
     ax.set_ylabel("Throughput per station [Mbit/s]")
 
     ax.set_xlim(0, 1)
-    ax.set_ylim(0, y_limit) # Ustawienie wyliczonego limitu
+    ax.set_ylim(0, y_limit)
 
     ax.set_xticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     ax.set_xticklabels(["0", "0.2", "0.4", "0.6", "0.8", "1"])
+
+    ax.yaxis.set_major_locator(MultipleLocator(y_locators[i]))
+    ax.minorticks_off()
+    ax.xaxis.grid(False)
+    ax.yaxis.grid(True, linewidth=0.9, alpha=0.6)
     
-    # Ustawienie ticków co 5
-    ax.yaxis.set_major_locator(MultipleLocator(5))
-    ax.yaxis.set_minor_locator(MultipleLocator(1))
-    
-    ax.grid(True, which="major", alpha=1, zorder=0)
-    ax.grid(True, which="minor", alpha=0.3, zorder=0)
-    
-    if i == 0:
-        ax.legend(loc="lower left", ncol=1, frameon=True)
-    else:
-        ax.legend(loc="best", ncol=1, frameon=True)
+    # Poprawa widoczności podziałek
+    #ax.tick_params(which='major', length=6, width=1.2)
+
+    ax.legend(
+      #  legend_handles.values(),
+       # legend_handles.keys(),
+        loc="lower left",
+        ncol=1,
+        frameon=True,
+    )
 
 
-fig.suptitle("Throughput per station vs fraction of DB STAs for 5, 10, 20 and 40 stations, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s\n"
-             "\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$")
+# fig.suptitle("Throughput per station vs fraction of DB STAs for 5, 10, 20 and 40 stations, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s\n"
+#              "\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$")
 
-handles, labels = axes[0].get_legend_handles_labels()
-"""fig.legend(
-    handles,
-    labels,
-    loc='lower center',
-    ncol=2,
-    frameon=True,
-    #bbox_to_anchor=(0.5, 0.01)
-)"""
+# handles, labels = axes[0].get_legend_handles_labels()
+# """fig.legend(
+#     handles,
+#     labels,
+#     loc='lower center',
+#     ncol=2,
+#     frameon=True,
+#     #bbox_to_anchor=(0.5, 0.01)
+# )"""
+
+fig.tight_layout()
+
 plt.savefig("results/throughput_ratio.svg")
 plt.show()

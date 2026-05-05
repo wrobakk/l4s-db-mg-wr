@@ -138,7 +138,8 @@ for ax, (n_db, n_eb) in zip(axes, configs):
     ax.set_yscale("log")
     ax.set_xlim(*X_LIM)
     ax.minorticks_off()
-    ax.grid(True, which="major", axis="y", zorder=0)
+    ax.xaxis.grid(False)
+    ax.yaxis.grid(True, linewidth=0.9, alpha=0.6)
 
     ax.set_yticks([1, 1e-1, 1e-2, 1e-3, 1e-4])
     ax.set_yticklabels(["P0", "P90", "P99", "P99.9", "P99.99"])
@@ -161,7 +162,7 @@ for ax, (n_db, n_eb) in zip(axes, configs):
 
 
 
-#fig.tight_layout(rect=[0, 0.08, 1, 0.93])
+fig.tight_layout()
 
 output_file = f"results/ccdf_{TOTAL_STA}sta_all_ratios.svg"
 fig.savefig(output_file, dpi=300, bbox_inches="tight")

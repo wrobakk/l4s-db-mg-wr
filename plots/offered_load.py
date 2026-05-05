@@ -86,8 +86,8 @@ for ax, (n_db, n_eb) in zip(axes, configs):
             subplot_handles[label] = line
 
     ax.set_title(f"{n_db} DB, {n_eb} EB")
-    ax.set_xlim(0, 29)
-    ax.set_ylim(bottom=0)
+    ax.set_xlim(0, 30)
+    ax.set_ylim(0,30)
     ax.set_xticks(range(0, 30, 3))
     ax.grid(True, zorder=0)
     ax.set_xlabel("Offered load per station [Mbps]")
@@ -97,7 +97,7 @@ for ax, (n_db, n_eb) in zip(axes, configs):
         ax.legend(
             subplot_handles.values(),
             subplot_handles.keys(),
-            loc="best",
+            loc="upper left",
             ncol=1,
             frameon=True,
         )
@@ -109,6 +109,6 @@ fig.suptitle(
 
 fig.tight_layout(rect=[0, 0.0, 1, 0.95])
 
-output_file = "results/throughput_per_station_vs_offered_load_5sta_all_ratios.png"
+output_file = "results/throughput_per_station_vs_offered_load_5sta_all_ratios.svg"
 fig.savefig(output_file, dpi=300, bbox_inches="tight")
 plt.show()

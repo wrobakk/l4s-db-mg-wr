@@ -2,7 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-SUBPLOT_WIDTH = 5.5
+SUBPLOT_WIDTH = 6.4
 SUBPLOT_HEIGHT = 4.8
 
 PLOT_PARAMS = {

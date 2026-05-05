@@ -14,12 +14,12 @@ WARMUP_SECONDS = 30
 X_UNIT = "ms"
 X_LIM = (0, 2000)  # Limit for single station config
 
-N_DB = 5
+N_DB = 0
 N_EB = 5
 FILES = [
-    ("txop-trace-db-5-0-1.csv", "DB, RTS ON"),
-    #("txop-trace-db-5-0-0.csv", "DB, RTS OFF"),
-    ("txop-trace-eb-0-5-1.csv", "EB, RTS ON"),
+    #("txop-trace-db-5-0-1.csv", "DB, RTS ON"),
+    ("txop-trace-db-5-0-0.csv", "DB, RTS OFF"),
+    #("txop-trace-eb-0-5-1.csv", "EB, RTS ON"),
     #("txop-trace-eb-0-5-0.csv", "EB, RTS OFF"),
 ]
 
@@ -117,10 +117,11 @@ for filename, label in FILES:
     )
     legend_handles[label] = line
 
-ax.set_xlim(*X_LIM)
+ax.set_xlim(X_LIM)
 ax.set_yscale("log")
 ax.minorticks_off()
-ax.grid(True, which="major", axis="y", zorder=0)
+ax.xaxis.grid(False)
+ax.yaxis.grid(True, linewidth=0.9, alpha=0.6)
 
 # Set x-axis ticks every 200 ms
 ax.set_xticks(range(0, int(X_LIM[1]) + 1, 200))
@@ -138,14 +139,8 @@ ax.legend(
     frameon=True,
 )
 
-fig.suptitle(
-    "CCDF of channel access delay for "
-    f"{N_DB + N_EB} STA{'s' if N_DB + N_EB != 1 else ''} ({N_DB} DB, {N_EB} EB),\n"
-    "staggered startup (1 STA/s), warm-up 30 s after the last start, \ntotal simulation time 200 s, \n"
-    "\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$"
-)
 
-fig.tight_layout(rect=[0, 0.08, 1, 0.93])
+fig.tight_layout()
 
 fig.savefig(output_file, dpi=300, bbox_inches="tight")
 plt.show()

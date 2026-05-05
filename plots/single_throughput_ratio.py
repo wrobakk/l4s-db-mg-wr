@@ -37,17 +37,17 @@ d_rts_off = d[d["enableRts"] == False].sort_values("fractionDb")
 
 legend_handles = {}
 
-line1, = ax.plot(
-    d_rts_on["fractionDb"],
-    d_rts_on["throughputBSS_DB"] / d_rts_on["nDbWifi"].replace(0, np.nan),
-    color=colors["DB, RTS ON"],
-    marker="o",
-    zorder=3,
-    label="DB, RTS/CTS ON",
-    linewidth=1.5,
-    markersize=6,
-)
-legend_handles["DB, RTS ON"] = line1
+# line1, = ax.plot(
+#     d_rts_on["fractionDb"],
+#     d_rts_on["throughputBSS_DB"] / d_rts_on["nDbWifi"].replace(0, np.nan),
+#     color=colors["DB, RTS ON"],
+#     marker="o",
+#     zorder=3,
+#     label="DB, RTS ON",
+#     linewidth=1.5,
+#     markersize=6,
+# )
+# legend_handles["DB, RTS ON"] = line1
 
 line2, = ax.plot(
     d_rts_off["fractionDb"],
@@ -61,17 +61,17 @@ line2, = ax.plot(
 )
 legend_handles["DB, RTS OFF"] = line2
 
-line3, = ax.plot(
-    d_rts_on["fractionDb"],
-    d_rts_on["throughputBSS_EB"] / d_rts_on["nEbWifi"].replace(0, np.nan),
-    color=colors["EB, RTS ON"],
-    marker="o",
-    zorder=3,
-    label="EB, RTS/CTS ON",
-    linewidth=1.5,
-    markersize=6,
-)
-legend_handles["EB, RTS ON"] = line3
+# line3, = ax.plot(
+#     d_rts_on["fractionDb"],
+#     d_rts_on["throughputBSS_EB"] / d_rts_on["nEbWifi"].replace(0, np.nan),
+#     color=colors["EB, RTS ON"],
+#     marker="o",
+#     zorder=3,
+#     label="EB, RTS/CTS ON",
+#     linewidth=1.5,
+#     markersize=6,
+# )
+# legend_handles["EB, RTS ON"] = line3
 
 line4, = ax.plot(
     d_rts_off["fractionDb"],
@@ -100,7 +100,8 @@ ax.yaxis.set_minor_locator(MultipleLocator(1))
 
 ax.minorticks_off()
 ax.xaxis.grid(False)
-ax.yaxis.grid(True)
+ax.yaxis.grid(True, linewidth=0.9, alpha=0.6)
+    
 
 ax.legend(
     legend_handles.values(),
@@ -110,14 +111,14 @@ ax.legend(
     frameon=True,
 )
 
-fig.suptitle(
-    "Throughput per station vs fraction of DB STAs for "
-    f"{TOTAL_STA} STA\n"
-    #"staggered startup (1 STA/s), warm-up 30 s after the last start, \ntotal simulation time 200 s, \n"
-    #"\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$"
-)
+# fig.suptitle(
+#     "Throughput per station vs fraction of DB STAs for "
+#     f"{TOTAL_STA} STA\n"
+#     #"staggered startup (1 STA/s), warm-up 30 s after the last start, \ntotal simulation time 200 s, \n"
+#     #"\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$"
+# )
 
-fig.tight_layout(rect=[0, 0.08, 1, 0.93])
+fig.tight_layout()
 
 output_file = f"results/throughput_ratio_{TOTAL_STA}sta.svg"
 fig.savefig(output_file, dpi=300, bbox_inches="tight")
