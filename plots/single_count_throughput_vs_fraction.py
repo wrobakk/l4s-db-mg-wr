@@ -98,6 +98,7 @@ line4, = ax.plot(
     linewidth=1.5,
     markersize=6,
 )
+
 legend_handles["EB, RTS OFF"] = line4
 
 ax.set_xlabel("Fraction of DB STAs")
