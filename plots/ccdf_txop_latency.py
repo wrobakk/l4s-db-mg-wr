@@ -1,3 +1,15 @@
+"""
+Script: CCDF TXOP Latency Analysis
+Description: Generates CCDF plots comparing TXOP latencies
+across different DB/EB station configurations. Shows delay distribution for packets.
+
+To change the data source: Edit the DATA_DIR path below.
+To change STA count: Edit the TOTAL_STA and configs below.
+To enable RTS/CTS: Uncomment the RTS ON lines in the build_files() function line 98 and 103.
+Manually adjust X_LIM based on TOTAL_STA count and DB parameters e.g.,:
+5 STAs -> (0, 2000); 10 STAs -> (0, 3500); 20 STAs -> (0, 6000); 40 STAs -> (0, 14000)
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,6 +19,7 @@ from plot_config import apply_plot_style, get_cmap, get_colors, SUBPLOT_WIDTH, S
 
 apply_plot_style()
 
+# Change the data source path here
 DATA_DIR = Path("../data/8_15ipt/txop_08_04")
 TOTAL_STA = 5
 GAP_SECONDS = 1
@@ -14,7 +27,7 @@ WARMUP_SECONDS =30
 X_UNIT = "ms"
 X_LIM = (0, 2000) # 5 - 2000; 10 - 3500; 20 - 6000; 40 - 14000 
 
-configs = [(1, 4), (2, 3), (3, 2), (4, 1)]  # 5 STAs
+configs = [(0, 5), (1, 4), (2, 3), (3, 2), (4, 1), (5, 0)]  # 5 STAs
 #configs = [(0, 10), (2, 8), (4, 6), (6, 4), (8, 2), (10, 0)]  # 10 STAs
 #configs = [(0, 20), (4, 16), (8, 12), (12, 8), (16, 4), (20, 0)]  # 20 STAs
 #configs = [(0, 40), (8, 32), (16, 24), (24, 16), (32, 8), (40, 0)]  # 40 STAs
@@ -81,10 +94,12 @@ def build_files(n_db, n_eb):
     files = []
 
     if n_db > 0:
-       # files.append((f"txop-trace-db-{n_db}-{n_eb}-1.csv", "DB, RTS ON"))
+        # Uncomment the line below to include DB RTS/CTS ON results
+        #files.append((f"txop-trace-db-{n_db}-{n_eb}-1.csv", "DB, RTS ON"))
         files.append((f"txop-trace-db-{n_db}-{n_eb}-0.csv", "DB, RTS OFF"))
 
     if n_eb > 0:
+        # Uncomment the line below to include EB RTS/CTS ON results
         #files.append((f"txop-trace-eb-{n_db}-{n_eb}-1.csv", "EB, RTS ON"))
         files.append((f"txop-trace-eb-{n_db}-{n_eb}-0.csv", "EB, RTS OFF"))
 
@@ -92,8 +107,8 @@ def build_files(n_db, n_eb):
 
 
 fig, axes = plt.subplots(
-    2, 2,
-    figsize=(2 * SUBPLOT_WIDTH, 2 * SUBPLOT_HEIGHT),
+    2, 3,
+    figsize=(3 * SUBPLOT_WIDTH, 2* SUBPLOT_HEIGHT),
 )
 axes = axes.flatten()
 
@@ -147,20 +162,10 @@ for ax, (n_db, n_eb) in zip(axes, configs):
     ax.set_ylabel("CCDF")
     
     ax.legend(
-    #legend_handles.values(),
-    #legend_handles.keys(),
     loc="best",
     ncol=1,
     frameon=True,
 )
-
-
-#fig.suptitle(
- #   "CCDF of channel access delay for "f"{TOTAL_STA}" " stations, staggered startup (1 STA/s), warm-up 30 s after the last start, total simulation time 200 s, \n"
- #   "\n$\\mathbf{Deterministic \\: backoff = 9 + 1.5*ipt}$"
-#)
-
-
 
 fig.tight_layout()
 

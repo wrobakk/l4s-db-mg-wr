@@ -1,3 +1,11 @@
+"""
+Single STA Count Throughput Ratio Analysis
+Description: Generates a single plot comparing per-station throughput for a fixed STA count
+across DB/EB fractions and RTS/CTS settings.
+
+To change the data source: Edit the read_csv() path below to point to your desired CSV file.
+To change the STA count: Edit the TOTAL_STA variable below, line 28 to the desired total number of STAs ( 5, 10, 20, 40).
+"""
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,6 +15,7 @@ from plot_config import apply_plot_style, get_colors, SUBPLOT_WIDTH, SUBPLOT_HEI
 
 apply_plot_style()
 
+# Change the data source path here
 df = pd.read_csv("../data/8_15ipt/throughput.csv")
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
@@ -37,18 +46,22 @@ d_rts_off = d[d["enableRts"] == False].sort_values("fractionDb")
 
 legend_handles = {}
 
-# line1, = ax.plot(
-#     d_rts_on["fractionDb"],
-#     d_rts_on["throughputBSS_DB"] / d_rts_on["nDbWifi"].replace(0, np.nan),
-#     color=colors["DB, RTS ON"],
-#     marker="o",
-#     zorder=3,
-#     label="DB, RTS ON",
-#     linewidth=1.5,
-#     markersize=6,
-# )
-# legend_handles["DB, RTS ON"] = line1
+# Tip: Comment out one of the plot blocks below to show only RTS/CTS ON or only RTS/CTS OFF results
 
+# DB with RTS/CTS ON
+line1, = ax.plot(
+    d_rts_on["fractionDb"],
+    d_rts_on["throughputBSS_DB"] / d_rts_on["nDbWifi"].replace(0, np.nan),
+    color=colors["DB, RTS ON"],
+    marker="o",
+    zorder=3,
+    label="DB, RTS ON",
+    linewidth=1.5,
+    markersize=6,
+)
+legend_handles["DB, RTS ON"] = line1
+
+# DB with RTS/CTS OFF
 line2, = ax.plot(
     d_rts_off["fractionDb"],
     d_rts_off["throughputBSS_DB"] / d_rts_off["nDbWifi"].replace(0, np.nan),
@@ -61,18 +74,20 @@ line2, = ax.plot(
 )
 legend_handles["DB, RTS OFF"] = line2
 
-# line3, = ax.plot(
-#     d_rts_on["fractionDb"],
-#     d_rts_on["throughputBSS_EB"] / d_rts_on["nEbWifi"].replace(0, np.nan),
-#     color=colors["EB, RTS ON"],
-#     marker="o",
-#     zorder=3,
-#     label="EB, RTS/CTS ON",
-#     linewidth=1.5,
-#     markersize=6,
-# )
-# legend_handles["EB, RTS ON"] = line3
+# EB with RTS/CTS ON
+line3, = ax.plot(
+    d_rts_on["fractionDb"],
+    d_rts_on["throughputBSS_EB"] / d_rts_on["nEbWifi"].replace(0, np.nan),
+    color=colors["EB, RTS ON"],
+    marker="o",
+    zorder=3,
+    label="EB, RTS/CTS ON",
+    linewidth=1.5,
+    markersize=6,
+)
+legend_handles["EB, RTS ON"] = line3
 
+# EB with RTS/CTS OFF
 line4, = ax.plot(
     d_rts_off["fractionDb"],
     d_rts_off["throughputBSS_EB"] / d_rts_off["nEbWifi"].replace(0, np.nan),
@@ -110,13 +125,6 @@ ax.legend(
     ncol=1,
     frameon=True,
 )
-
-# fig.suptitle(
-#     "Throughput per station vs fraction of DB STAs for "
-#     f"{TOTAL_STA} STA\n"
-#     #"staggered startup (1 STA/s), warm-up 30 s after the last start, \ntotal simulation time 200 s, \n"
-#     #"\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$"
-# )
 
 fig.tight_layout()
 

@@ -9,6 +9,21 @@ CSV_FILE = "../data/8_15ipt/offered_load_sweep_8_15_ipt.csv"
 
 configs = [(0, 5), (1, 4), (2, 3), (3, 2), (4, 1), (5, 0)]  # 5 STAs
 
+# offered load per station [bps]
+OFFERED_RATES = [
+    1_000_000,
+    5_000_000,
+    9_000_000,
+    13_000_000,
+    17_000_000,
+    21_000_000,
+    25_000_000,
+    29_000_000,
+]
+
+x_ticks = [0] + [rate / 1e6 for rate in OFFERED_RATES]
+x_max = max(x_ticks)
+
 colors = {
     "DB, RTS ON": get_cmap(4)[0],
     "DB, RTS OFF": get_cmap(4)[1],
@@ -86,10 +101,11 @@ for ax, (n_db, n_eb) in zip(axes, configs):
             subplot_handles[label] = line
 
     ax.set_title(f"{n_db} DB, {n_eb} EB")
-    ax.set_xlim(0, 30)
-    ax.set_ylim(0,30)
-    ax.set_xticks(range(0, 30, 3))
-    ax.grid(True, zorder=0)
+    ax.set_xlim(left=0, right=x_max)
+    ax.set_ylim(0, 30)
+    ax.set_xticks(x_ticks)
+    ax.xaxis.grid(False)
+    ax.yaxis.grid(True, linewidth=0.9, alpha=0.6)
     ax.set_xlabel("Offered load per station [Mbps]")
     ax.set_ylabel("Throughput per station [Mbps]")
 
@@ -102,12 +118,12 @@ for ax, (n_db, n_eb) in zip(axes, configs):
             frameon=True,
         )
 
-fig.suptitle(
-    "Per-station throughput vs offered load for 5 stations, total simulation time 200 s\n"
-    "\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$"
-)
+# fig.suptitle(
+#     "Per-station throughput vs offered load for 5 stations, total simulation time 200 s\n"
+#     "\n$\\mathbf{Deterministic \\: backoff = 8 + 1.5*ipt}$"
+# )
 
-fig.tight_layout(rect=[0, 0.0, 1, 0.95])
+fig.tight_layout()
 
 output_file = "results/throughput_per_station_vs_offered_load_5sta_all_ratios.svg"
 fig.savefig(output_file, dpi=300, bbox_inches="tight")

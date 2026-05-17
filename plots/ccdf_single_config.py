@@ -1,3 +1,22 @@
+"""
+Script: Single Config CCDF Analysis
+Description: Generates CCDF plot comparing TXOP latencies for a single DB/EB configuration.
+Useful for detailed analysis of specific station mix.
+
+File naming convention:
+  txop-trace-[DB|EB]-[nDB]-[nEB]-[RTS].csv
+  where:
+  - [DB|EB]: Station type - DB or EB (which station type's delays are in this file)
+  - [nDB]: Total number of DB stations in the simulation
+  - [nEB]: Total number of EB stations in the simulation
+  - [RTS]: RTS/CTS mode (1=ON, 0=OFF)
+  Example: txop-trace-db-2-3-1.csv = DB station delays from simulation with 2 DB + 3 EB stations, RTS/CTS ON
+
+To change the data source: Edit the DATA_DIR path below.
+To change station counts: Edit N_DB and N_EB below line 38 and 39.
+To adjust X-axis limit: Edit X_LIM based on your data scale.
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,20 +26,26 @@ from plot_config import apply_plot_style, get_cmap, get_colors, SUBPLOT_WIDTH, S
 
 apply_plot_style()
 
+# Change the data source path here
 DATA_DIR = Path("../data/8_15ipt/txop_08_04")
 
 GAP_SECONDS = 1
 WARMUP_SECONDS = 30
 X_UNIT = "ms"
+# Manually adjust X_LIM based on your data scale
 X_LIM = (0, 2000)  # Limit for single station config
 
 N_DB = 0
 N_EB = 5
+# Tip: Comment/uncomment lines below to include/exclude RTS/CTS results
+# Remember: last digit in filename = 1 (RTS ON), 0 (RTS OFF)
 FILES = [
+    # Uncomment to include DB RTS/CTS ON
     #("txop-trace-db-5-0-1.csv", "DB, RTS ON"),
-    ("txop-trace-db-5-0-0.csv", "DB, RTS OFF"),
-    #("txop-trace-eb-0-5-1.csv", "EB, RTS ON"),
-    #("txop-trace-eb-0-5-0.csv", "EB, RTS OFF"),
+    ("txop-trace-db-2-3-0.csv", "DB, RTS OFF"),
+    # Uncomment to include EB RTS/CTS ON and OFF
+    #("txop-trace-eb-5-0-1.csv", "EB, RTS ON"),
+    ("txop-trace-eb-2-3-0.csv", "EB, RTS OFF"),
 ]
 
 output_file = f"results/ccdf_nDb{N_DB}_nEb{N_EB}.svg"

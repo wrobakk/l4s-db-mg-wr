@@ -28,7 +28,7 @@ CONFIGS = [
     (5, 0),
 ]
 
-RTS_VALUES = [1, 0]
+RTS_VALUES = [0]
 
 # offered load per station [bps]
 OFFERED_RATES = [
@@ -324,9 +324,9 @@ for ax, (n_db, n_eb) in zip(axes, CONFIGS):
         frameon=True,
     )
 
-fig.suptitle(
-    "P99 of MAC end-to-end delay for 5 stations"
-)
+# fig.suptitle(
+#     "P99 of MAC end-to-end delay for 5 stations"
+# )
 
 fig.tight_layout()
 
