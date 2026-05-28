@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,9 +7,12 @@ from matplotlib.ticker import MultipleLocator
 
 from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGHT
 
+
 apply_plot_style()
 
 df = pd.read_csv("../data/10_15ipt/singlestation.csv")
+OUTPUT_DIR = Path("results")
+OUTPUT_DIR.mkdir(exist_ok=True)
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
     "True": True,
@@ -64,14 +69,15 @@ current_max = np.nanmax([
     single_db["singleStaThroughput"].max(),
     single_eb["singleStaThroughput"].max()
 ])
-y_limit = 5 * np.ceil((current_max + 1) / 5)
-ax.set_ylim(0, y_limit)
 
-ax.yaxis.set_major_locator(MultipleLocator(5))
+ax.set_ylim(0, 80)
+
+ax.yaxis.set_major_locator(MultipleLocator(10))
 ax.yaxis.set_minor_locator(MultipleLocator(1))
 
-ax.grid(True, which="major", alpha=1, zorder=0)
-ax.grid(True, which="minor", alpha=0.3, zorder=0)
+ax.minorticks_off()
+ax.xaxis.grid(False)
+ax.yaxis.grid(True, linewidth=0.9, alpha=0.6)
 ax.legend(loc="best", frameon=True)
 
 fig.suptitle(
@@ -79,5 +85,6 @@ fig.suptitle(
 )
 
 plt.tight_layout()
-plt.savefig("single_minority_throughput.png", dpi=300, bbox_inches="tight")
+OUTPUT_FILE = OUTPUT_DIR / "single_miniority_throughput.svg"
+fig.savefig(OUTPUT_FILE, dpi=300, bbox_inches="tight")
 plt.show()

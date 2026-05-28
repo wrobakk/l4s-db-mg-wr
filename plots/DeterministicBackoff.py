@@ -6,7 +6,7 @@ from plot_config import apply_plot_style, get_cmap
 
 apply_plot_style()
 
-df = pd.read_csv("../data/8_15ipt/deterministic-backoff-trace.csv", header=None, names=["Time", "NodeId", "Backoff"])
+df = pd.read_csv("../data/backoff/deterministic-rts-off.csv", header=None, names=["Time", "NodeId", "Backoff"])
 
 node_ids = sorted(df["NodeId"].unique())
 num_nodes = len(node_ids)
@@ -26,8 +26,8 @@ plt.ylabel("Backoff [slots]")
 ax.xaxis.grid(False)
 ax.yaxis.grid(True, linewidth=0.9, alpha=0.6)
 
-plt.xlim(0, 100)
+plt.xlim(0, 60)
 plt.ylim(0, 80)
 plt.tight_layout()
-plt.savefig("results/deterministic_backoff.svg", dpi=300, bbox_inches="tight")
+plt.savefig("results/deterministic_backoff-rtsoff.svg", dpi=300, bbox_inches="tight")
 plt.show()
