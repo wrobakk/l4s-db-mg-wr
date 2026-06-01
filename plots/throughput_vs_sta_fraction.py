@@ -17,13 +17,17 @@ from plot_config import apply_plot_style, get_cmap, SUBPLOT_WIDTH, SUBPLOT_HEIGH
 
 apply_plot_style()
 
+<<<<<<< HEAD:plots/throughput_vs_sta_fraction.py
 # Change the data source path here
 df = pd.read_csv("../data/10_15ipt/throughput.csv")
+=======
+df = pd.read_csv("../data/7_ipt/throughput.csv")
+>>>>>>> 8a94839 (Adding x+ipt and initial and intermediate backoff):plots/throughput_ratio_plot.py
 
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
-    "True": True,
-    "False": False
+    "1": True,
+    "0": False
 })
 
 
@@ -59,9 +63,12 @@ for i, total in enumerate(totals):
     d_rts_on = d[d["enableRts"] == True].sort_values("fractionDb")
     d_rts_off = d[d["enableRts"] == False].sort_values("fractionDb")
 
+<<<<<<< HEAD:plots/throughput_vs_sta_fraction.py
     # Tip: Comment out one of the plot blocks below to show only RTS/CTS ON or only RTS/CTS OFF results
     
     # DB with RTS/CTS ON
+=======
+>>>>>>> 8a94839 (Adding x+ipt and initial and intermediate backoff):plots/throughput_ratio_plot.py
     ax.plot(
         d_rts_on["fractionDb"],
         d_rts_on["throughputBSS_DB"] / d_rts_on["nDbWifi"].replace(0, np.nan),
@@ -75,7 +82,10 @@ for i, total in enumerate(totals):
         color=colors[1], marker="s", zorder=3, label="DB, RTS/CTS OFF",
     )
 
+<<<<<<< HEAD:plots/throughput_vs_sta_fraction.py
     # EB with RTS/CTS ON
+=======
+>>>>>>> 8a94839 (Adding x+ipt and initial and intermediate backoff):plots/throughput_ratio_plot.py
     ax.plot(
         d_rts_on["fractionDb"],
         d_rts_on["throughputBSS_EB"] / d_rts_on["nEbWifi"].replace(0, np.nan),
