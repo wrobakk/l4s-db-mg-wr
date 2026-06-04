@@ -27,7 +27,7 @@ from plot_config import apply_plot_style, get_cmap, get_colors, SUBPLOT_WIDTH, S
 apply_plot_style()
 
 # Change the data source path here
-DATA_DIR = Path("../data/8_15ipt/txop_08_04")
+DATA_DIR = Path("../data/8_2ipt/txop")
 
 GAP_SECONDS = 1
 WARMUP_SECONDS = 30

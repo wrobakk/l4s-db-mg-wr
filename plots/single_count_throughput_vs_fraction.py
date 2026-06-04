@@ -16,11 +16,11 @@ from plot_config import apply_plot_style, get_colors, SUBPLOT_WIDTH, SUBPLOT_HEI
 apply_plot_style()
 
 # Change the data source path here
-df = pd.read_csv("../data/8_15ipt/throughput.csv")
+df = pd.read_csv("../data/8_2ipt/throughput.csv")
 
 df["enableRts"] = df["enableRts"].astype(str).str.strip().map({
-    "True": True,
-    "False": False
+    "1": True,
+    "0": False
 })
 
 df["totalSta"] = df["nDbWifi"] + df["nEbWifi"]
