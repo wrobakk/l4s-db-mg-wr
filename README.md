@@ -1,201 +1,231 @@
-# Figure Generation Guide
+# Deterministic Backoff Evaluation in IEEE 802.11ax Networks
 
-This guide explains how to generate figures from the dataset using the provided plotting scripts.
+This repository contains the simulation scenarios, collected datasets, data-processing scripts, and plotting scripts used in a master's thesis conducted at AGH University of Krakow.
 
-## Overview
+The study evaluates the Deterministic Backoff (DB) channel access mechanism and its coexistence with the standard Exponential Backoff (EB) mechanism in IEEE 802.11ax networks. The evaluation focuses mainly on per-station throughput and channel access delay for different numbers and proportions of DB and EB stations.
 
-There are 4 main plotting scripts available:
+## Scope of the Repository
 
-1. **throughput_vs_sta_fraction.py** - 2x2 subplot comparison of per-station throughput
-2. **single_count_throughput_vs_fraction.py** - Single plot for fixed STA count
-3. **ccdf_txop_latency.py** - CCDF plots with multiple DB/EB configurations
-4. **ccdf_single_config.py** - CCDF plot for a single DB/EB configuration
+The repository provides the materials needed to process the collected simulation results and reproduce the figures presented in the thesis.
 
----
+The implementation of the DB mechanism itself is not included. It was developed in a private fork of ns-3 maintained by CableLabs and is not currently publicly available. Therefore, running the included C++ simulation scenarios requires access to a compatible ns-3 version containing the DB implementation.
 
-## 1. Throughput vs STA Fraction (Multi-config comparison)
+The provided CSV datasets and Python scripts can be used independently of the private ns-3 repository to reproduce the result figures.
 
-**File:** `throughput_vs_sta_fraction.py`
+## Repository Contents
 
-**Description:** Generates a 2x2 subplot visualization comparing per-station throughput across 4 different total STA counts (5, 10, 20, 40). Each subplot shows how throughput varies with DB/EB station fraction for both RTS/CTS ON and OFF.
+### Simulation scenarios
 
-**Usage:**
+#### `l4s-wifi-krk.cc`
 
-1. Edit the data source path ( line 21):
-   ```python
-   df = pd.read_csv("../data/7_15ipt/throughput.csv")  # Change this path
-   ```
+Defines a single-BSS IEEE 802.11ax infrastructure scenario.
 
-2. (Optional) To show only RTS/CTS ON or OFF results, comment out the corresponding plot blocks around lines 65-90:
-   ```python
-   # DB with RTS/CTS ON
-   #ax.plot(...)
-   
-   # DB with RTS/CTS OFF - comment this block if you only want RTS ON
-   # ax.plot(...)
-   ```
+All stations in the scenario use either Deterministic Backoff or standard Exponential Backoff, depending on the value of the `enableDB` parameter. The scenario is used to evaluate homogeneous DB and EB networks.
 
-3. Run the script:
-   ```bash
-   python throughput_vs_sta_fraction.py
-   ```
+The program allows the following parameters to be configured:
 
-4. Output: `results/throughput[X]_[Y]ipt_ratio.svg`
+* number of stations,
+* simulation duration,
+* MCS index,
+* RTS/CTS operation,
+* channel access mechanism,
+* PCAP generation.
 
----
+The scenario reports aggregate throughput and can generate TXOP, backoff, and interruption-counter traces.
 
-## 2. Single Count Throughput Analysis
+#### `ac-be-main.cc`
 
-**File:** `single_count_throughput_vs_fraction.py`
+Defines a coexistence scenario containing DB and EB stations operating on the same wireless channel.
 
-**Description:** Generates a single plot for a fixed STA count. Useful for zoomed-in analysis of specific scenario (e.g., only 5 STAs).
+The scenario uses two colocated BSSs: one containing DB stations and the other containing EB stations. The number of stations using each mechanism can be configured separately. This makes it possible to evaluate different DB-to-EB station proportions.
 
-**Usage:**
+The program supports configuration of:
 
-1. Edit the data source path (near line 19):
-   ```python
-   df = pd.read_csv("../data/8_15ipt/throughput.csv")  # Change this path
-   ```
+* number of DB stations,
+* number of EB stations,
+* simulation duration,
+* station start times,
+* warm-up period,
+* MCS index,
+* channel width,
+* guard interval,
+* RTS/CTS operation,
+* UDP payload size,
+* PCAP generation.
 
-2. Change the STA count to analyze (near line 25):
-   ```python
-   TOTAL_STA = 5  # Change to desired count (5, 10, 20, or 40)
-   ```
+The scenario reports throughput separately for the DB and EB BSSs and records TXOP traces for both station groups.
 
-3. (Optional) Comment/uncomment plot blocks to show/hide RTS/CTS results (around lines 51-100)
+### Data-processing and plotting scripts
 
-4. Run the script:
-   ```bash
-   python single_count_throughput_vs_fraction.py
-   ```
+#### `throughput_vs_sta_fraction.py`
 
-5. Output: `results/single_count_[TOTAL_STA]_throughput.svg`
+Generates a multi-panel figure presenting average per-station throughput as a function of the proportion of DB and EB stations.
 
----
+The figure contains results for networks with 5, 10, 20, and 40 stations. Results obtained with RTS/CTS enabled and disabled can be presented on the same figure.
 
-## 3. CCDF TXOP Latency (Multiple configurations)
+#### `single_count_throughput_vs_fraction.py`
 
-**File:** `ccdf_txop_latency.py`
+Generates a throughput figure for one selected total number of stations.
 
-**Description:** Generates CCDF (Cumulative Distribution Function) plots showing TXOP latency/delay distribution. The 2x3 subplot compares different DB/EB configurations for a specific STA count.
+This script is used to present one network size separately, for example a network containing 5, 10, 20, or 40 stations.
 
-**File Naming Convention:**
+The network size is selected using the `TOTAL_STA` variable.
+
+#### `ccdf_txop_latency.py`
+
+Generates a multi-panel complementary cumulative distribution function (CCDF) figure for the measured channel access delay.
+
+Each panel represents a different proportion of DB and EB stations. The script is used to compare the delay distributions of both channel access mechanisms across multiple coexistence configurations.
+
+The selected network size, DB/EB configurations, input directory, and horizontal-axis range are defined directly in the script.
+
+#### `ccdf_single_config.py`
+
+Generates a CCDF figure for one selected DB and EB station configuration.
+
+This script is intended for a detailed comparison of a particular scenario, such as one DB station operating together with four EB stations.
+
+The number of DB and EB stations and the trace files included in the figure are selected in the script.
+
+#### `plot_config.py`
+
+Contains the common plotting configuration used by the Python scripts.
+
+It defines figure dimensions, font sizes, line styles, markers, and other formatting settings. The file is imported by the plotting scripts and is not intended to be executed directly.
+
+### Data directories
+
+#### `data/`
+
+Contains the processed throughput results and TXOP traces used to generate the figures.
+
+#### `results/`
+
+Contains the figures generated by the plotting scripts. Figures are saved in SVG format.
+
+## Software Requirements
+
+### Simulation environment
+
+Running the C++ scenarios requires:
+
+* a compatible fork of ns-3 containing the DB implementation,
+* an IEEE 802.11ax Wi-Fi module,
+* a C++ compiler supported by ns-3.
+
+The simulation source files should be placed in the `scratch/` directory of the ns-3 installation.
+
+Example commands:
+
+```bash
+./ns3 run "scratch/l4s-wifi-krk --nWifi=5 --enableDB=1 --enableRts=0"
 ```
-txop-trace-[DB|EB]-[nDB]-[nEB]-[RTS].csv
-  - [DB|EB]: Station type (DB or EB stations data)
-  - [nDB]: Total number of DB stations in simulation
-  - [nEB]: Total number of EB stations in simulation
-  - [RTS]: RTS/CTS mode (1=ON, 0=OFF)
-  
-Example: txop-trace-db-2-3-1.csv = DB station delays from sim with 2 DB + 3 EB stations, RTS/CTS ON
+
+```bash
+./ns3 run "scratch/ac-be-main --nDbWifi=2 --nEbWifi=3 --enableRts=0"
 ```
 
-**Usage:**
+Additional command-line parameters can be displayed with:
 
-1. Edit the data source path (near line 23):
-   ```python
-   DATA_DIR = Path("../data/8_15ipt/txop_08_04")  # Change this path
-   ```
-
-2. Change the STA count and configurations (near lines 24 and 30-33):
-   ```python
-   TOTAL_STA = 5
-   configs = [(0, 5), (1, 4), (2, 3), (3, 2), (4, 1), (5, 0)]  # 5 STAs
-   
-   # For 10 STAs:
-   # configs = [(0, 10), (2, 8), (4, 6), (6, 4), (8, 2), (10, 0)]
-   ```
-
-3. Adjust X-axis limit if needed (near line 27):
-   ```python
-   X_LIM = (0, 2000)  # Change based on expected delay range for number of stations and paramters
-   ```
-
-4. (Optional) Uncomment RTS/CTS ON lines in build_files() function to include those results line 98 and 103
-
-5. Run the script:
-   ```bash
-   python ccdf_txop_latency.py
-   ```
-
-6. Output: `results/ccdf_[TOTAL_STA]sta_all_ratios.svg`
-
----
-
-## 4. CCDF Single Configuration
-
-**File:** `ccdf_single_config.py`
-
-**Description:** Generates a single CCDF plot for one specific DB/EB configuration. Useful for detailed analysis of a particular scenario.
-
-**Usage:**
-
-1. Edit the data source path (near line 35):
-   ```python
-   DATA_DIR = Path("../data/8_15ipt/txop_08_04")  # Change this path
-   ```
-
-2. Set the station counts to analyze (near lines 38-39):
-   ```python
-   N_DB = 0    # Number of DB stations
-   N_EB = 5    # Number of EB stations
-   ```
-
-3. Choose which files to plot by uncommenting/commenting lines in the FILES list (near lines 46-51):
-   ```python
-   FILES = [
-       # Uncomment to include desired scenario
-       #("txop-trace-db-5-0-1.csv", "DB, RTS ON"),
-       ("txop-trace-db-5-0-0.csv", "DB, RTS OFF"),  # Active
-       # Uncomment to include EB RTS/CTS ON and OFF
-       #("txop-trace-eb-5-0-1.csv", "EB, RTS ON"),
-       #("txop-trace-eb-5-0-0.csv", "EB, RTS OFF"),
-   ]
-   ```
-   Remember: Last digit in filename = 1 (RTS ON), 0 (RTS OFF)
-
-4. Adjust X-axis limit if needed line 36:
-   ```python
-   X_LIM = (0, 2000)  # Change based on expected delay range
-   ```
-
-5. Run the script:
-   ```bash
-   python ccdf_single_config.py
-   ```
-
-6. Output: `results/ccdf_nDb[N_DB]_nEb[N_EB].svg`
-
----
-
-## General Notes
-
-- All scripts output figures to the `results/` directory
-- Ensure the data CSV files exist at the specified paths
-- The `plot_config.py` module must be in the same directory (contains styling and color definitions)
-- Edit paths and parameters directly in the script files
-- All figures are saved as SVG format (scalable vector graphics)
-
-## Dataset Structure
-
-Expected data directory structure:
+```bash
+./ns3 run "scratch/ac-be-main --PrintHelp"
 ```
+
+### Python environment
+
+Generating the figures requires Python 3 and the following packages:
+
+```text
+numpy
+pandas
+matplotlib
+```
+
+They can be installed using:
+
+```bash
+python -m pip install numpy pandas matplotlib
+```
+
+## Data Organization
+
+The plotting scripts expect the input data to follow a structure similar to:
+
+```text
 data/
-  [X]_[Y]ipt/
-    throughput.csv              # For throughput plots
-    txop_[XX]_[YY]/
-      txop-trace-*.csv          # For CCDF plots
+└── <configuration>/
+    ├── throughput.csv
+    └── <txop_directory>/
+        ├── txop-trace-db-2-3-0.csv
+        ├── txop-trace-db-2-3-1.csv
+        ├── txop-trace-eb-2-3-0.csv
+        └── txop-trace-eb-2-3-1.csv
 ```
 
-Example:
-```
-data/8_15ipt/
-  throughput.csv
-  txop_08_04/
-    txop-trace-db-2-3-0.csv
-    txop-trace-db-2-3-1.csv
-    txop-trace-eb-2-3-0.csv
-    txop-trace-eb-2-3-1.csv
-    ... (more configurations)
+For example:
+
+```text
+data/
+└── 8_15ipt/
+    ├── throughput.csv
+    └── txop_08_04/
+        ├── txop-trace-db-2-3-0.csv
+        ├── txop-trace-db-2-3-1.csv
+        ├── txop-trace-eb-2-3-0.csv
+        └── txop-trace-eb-2-3-1.csv
 ```
 
+The directory names identify the simulation configuration used to collect the results.
+
+## TXOP Trace File Naming
+
+TXOP trace files use the following naming convention:
+
+```text
+txop-trace-<station-type>-<nDB>-<nEB>-<rts>.csv
+```
+
+where:
+
+* `<station-type>` identifies whether the trace contains measurements for DB or EB stations,
+* `<nDB>` is the number of DB stations in the scenario,
+* `<nEB>` is the number of EB stations in the scenario,
+* `<rts>` is `1` when RTS/CTS is enabled and `0` when it is disabled.
+
+For example:
+
+```text
+txop-trace-db-2-3-1.csv
+```
+
+contains measurements for DB stations collected in a scenario with two DB stations, three EB stations, and RTS/CTS enabled.
+
+## Generating the Figures
+
+The input paths and scenario parameters are currently defined directly in the plotting scripts. Before running a script, the corresponding data path and configuration variables should be checked.
+
+The scripts can be executed from the command line:
+
+```bash
+python throughput_vs_sta_fraction.py
+```
+
+```bash
+python single_count_throughput_vs_fraction.py
+```
+
+```bash
+python ccdf_txop_latency.py
+```
+
+```bash
+python ccdf_single_config.py
+```
+
+The generated figures are saved in the `results/` directory.
+
+## Reproducibility
+
+The included datasets and Python scripts allow the figures presented in the thesis to be regenerated without rerunning the ns-3 simulations.
+
+Full reproduction of the simulation experiments additionally requires the private ns-3 fork containing the Deterministic Backoff implementation.
