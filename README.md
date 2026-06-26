@@ -1,185 +1,127 @@
-# Deterministic Backoff Evaluation in IEEE 802.11ax Networks
+# Deterministic Backoff Simulation and Result Processing
 
-This repository contains the simulation scenarios, collected datasets, data-processing scripts, and plotting scripts used in a master's thesis conducted at AGH University of Krakow.
+This repository contains the simulation scenario, collected datasets, and data-processing scripts used in the master's thesis concerning the evaluation of Deterministic Backoff in IEEE 802.11ax networks.
 
-The study evaluates the Deterministic Backoff (DB) channel access mechanism and its coexistence with the standard Exponential Backoff (EB) mechanism in IEEE 802.11ax networks. The evaluation focuses mainly on per-station throughput and channel access delay for different numbers and proportions of DB and EB stations.
+The study focuses on the coexistence of stations using Deterministic Backoff (DB) and the standard Exponential Backoff (EB). The evaluated metrics include per-station throughput and channel access delay for different numbers and proportions of DB and EB stations.
 
-## Scope of the Repository
+## Repository Scope
 
-The repository provides the materials needed to process the collected simulation results and reproduce the figures presented in the thesis.
+The repository contains:
 
-The implementation of the DB mechanism itself is not included. It was developed in a private fork of ns-3 maintained by CableLabs and is not currently publicly available. Therefore, running the included C++ simulation scenarios requires access to a compatible ns-3 version containing the DB implementation.
+* the ns-3 simulation scenario used to collect the results,
+* CSV files containing the processed throughput results,
+* TXOP trace files used to calculate channel access delay,
+* Python scripts used to process the collected data,
+* Python scripts used to generate the figures presented in the thesis.
 
-The provided CSV datasets and Python scripts can be used independently of the private ns-3 repository to reproduce the result figures.
+The implementation of the DB mechanism is not included in this repository. It is maintained in a private CableLabs fork of ns-3 and is not currently publicly available.
 
-## Repository Contents
+As a result, the provided simulation scenario requires a compatible ns-3 version containing the DB implementation. However, the included datasets and Python scripts can be used independently to reproduce the figures presented in the thesis.
 
-### Simulation scenarios
+## Repository Structure
 
-#### `l4s-wifi-krk.cc`
-
-Defines a single-BSS IEEE 802.11ax infrastructure scenario.
-
-All stations in the scenario use either Deterministic Backoff or standard Exponential Backoff, depending on the value of the `enableDB` parameter. The scenario is used to evaluate homogeneous DB and EB networks.
-
-The program allows the following parameters to be configured:
-
-* number of stations,
-* simulation duration,
-* MCS index,
-* RTS/CTS operation,
-* channel access mechanism,
-* PCAP generation.
-
-The scenario reports aggregate throughput and can generate TXOP, backoff, and interruption-counter traces.
-
-#### `ac-be-main.cc`
-
-Defines a coexistence scenario containing DB and EB stations operating on the same wireless channel.
-
-The scenario uses two colocated BSSs: one containing DB stations and the other containing EB stations. The number of stations using each mechanism can be configured separately. This makes it possible to evaluate different DB-to-EB station proportions.
-
-The program supports configuration of:
-
-* number of DB stations,
-* number of EB stations,
-* simulation duration,
-* station start times,
-* warm-up period,
-* MCS index,
-* channel width,
-* guard interval,
-* RTS/CTS operation,
-* UDP payload size,
-* PCAP generation.
-
-The scenario reports throughput separately for the DB and EB BSSs and records TXOP traces for both station groups.
-
-### Data-processing and plotting scripts
-
-#### `throughput_vs_sta_fraction.py`
-
-Generates a multi-panel figure presenting average per-station throughput as a function of the proportion of DB and EB stations.
-
-The figure contains results for networks with 5, 10, 20, and 40 stations. Results obtained with RTS/CTS enabled and disabled can be presented on the same figure.
-
-#### `single_count_throughput_vs_fraction.py`
-
-Generates a throughput figure for one selected total number of stations.
-
-This script is used to present one network size separately, for example a network containing 5, 10, 20, or 40 stations.
-
-The network size is selected using the `TOTAL_STA` variable.
-
-#### `ccdf_txop_latency.py`
-
-Generates a multi-panel complementary cumulative distribution function (CCDF) figure for the measured channel access delay.
-
-Each panel represents a different proportion of DB and EB stations. The script is used to compare the delay distributions of both channel access mechanisms across multiple coexistence configurations.
-
-The selected network size, DB/EB configurations, input directory, and horizontal-axis range are defined directly in the script.
-
-#### `ccdf_single_config.py`
-
-Generates a CCDF figure for one selected DB and EB station configuration.
-
-This script is intended for a detailed comparison of a particular scenario, such as one DB station operating together with four EB stations.
-
-The number of DB and EB stations and the trace files included in the figure are selected in the script.
-
-#### `plot_config.py`
-
-Contains the common plotting configuration used by the Python scripts.
-
-It defines figure dimensions, font sizes, line styles, markers, and other formatting settings. The file is imported by the plotting scripts and is not intended to be executed directly.
-
-### Data directories
-
-#### `data/`
-
-Contains the processed throughput results and TXOP traces used to generate the figures.
-
-#### `results/`
-
-Contains the figures generated by the plotting scripts. Figures are saved in SVG format.
-
-## Software Requirements
-
-### Simulation environment
-
-Running the C++ scenarios requires:
-
-* a compatible fork of ns-3 containing the DB implementation,
-* an IEEE 802.11ax Wi-Fi module,
-* a C++ compiler supported by ns-3.
-
-The simulation source files should be placed in the `scratch/` directory of the ns-3 installation.
-
-Example commands:
-
-```bash
-./ns3 run "scratch/l4s-wifi-krk --nWifi=5 --enableDB=1 --enableRts=0"
+```text
+.
+├── data/
+├── scripts/
+└── results/
+    └── ac-be-main.cc
 ```
 
+The exact directory names may depend on the simulation configuration represented by a particular dataset.
+
+## Simulation Scenario
+
+### `ac-be-main.cc`
+
+This file contains the ns-3 scenario used to evaluate the coexistence of DB and EB stations.
+
+The scenario consists of two IEEE 802.11ax basic service sets operating on the same wireless channel:
+
+* one BSS contains stations using Deterministic Backoff,
+* the other BSS contains stations using Exponential Backoff.
+
+The number of DB and EB stations can be configured separately. This allows different proportions of both channel access mechanisms to be evaluated while keeping the total number of stations fixed.
+
+All stations generate uplink UDP traffic towards their corresponding access point. Station transmissions begin at different times according to the configured start interval. Throughput measurements start after all stations have begun transmitting and the configured warm-up period has elapsed.
+
+The scenario records:
+
+* aggregate throughput of DB stations,
+* aggregate throughput of EB stations,
+* TXOP start times,
+* TXOP durations,
+* failed TXOP attempts.
+
+### Simulation Parameters
+
+The main command-line parameters supported by the scenario are:
+
+| Parameter        | Description                                  | Default |
+| ---------------- | -------------------------------------------- | ------: |
+| `nDbWifi`        | Number of DB stations                        |     `1` |
+| `nEbWifi`        | Number of EB stations                        |     `1` |
+| `channelWidth`   | Channel width in MHz                         |    `20` |
+| `gi`             | Guard interval in nanoseconds                |   `800` |
+| `enableRts`      | Enables or disables RTS/CTS                  |  `true` |
+| `payloadSize`    | UDP payload size in bytes                    |  `1450` |
+| `simulationTime` | Total simulation duration in seconds         |    `30` |
+| `baseStart`      | Start time of the first station              |     `0` |
+| `gap`            | Time between consecutive station starts      |     `1` |
+| `warmup`         | Warm-up period after the last station starts |    `30` |
+| `pcap`           | Enables PCAP generation                      | `false` |
+
+The scenario uses IEEE 802.11ax in the 5 GHz band and the Best Effort access category. The offered UDP traffic rate is set to 150 Mbit/s per station.
+
+## Running the Simulation
+
+The `ac-be-main.cc` file should be placed in the `scratch/` directory of a compatible ns-3 installation.
+
+An example simulation with two DB stations and three EB stations is:
+
 ```bash
-./ns3 run "scratch/ac-be-main --nDbWifi=2 --nEbWifi=3 --enableRts=0"
+./ns3 run "scratch/ac-be-main --nDbWifi=2 --nEbWifi=3 --simulationTime=200 --enableRts=0"
 ```
 
-Additional command-line parameters can be displayed with:
+A simulation with RTS/CTS enabled can be started using:
+
+```bash
+./ns3 run "scratch/ac-be-main --nDbWifi=2 --nEbWifi=3 --simulationTime=200 --enableRts=1"
+```
+
+The available command-line options can be displayed with:
 
 ```bash
 ./ns3 run "scratch/ac-be-main --PrintHelp"
 ```
 
-### Python environment
-
-Generating the figures requires Python 3 and the following packages:
-
-```text
-numpy
-pandas
-matplotlib
-```
-
-They can be installed using:
-
-```bash
-python -m pip install numpy pandas matplotlib
-```
-
-## Data Organization
-
-The plotting scripts expect the input data to follow a structure similar to:
-
-```text
-data/
-└── <configuration>/
-    ├── throughput.csv
-    └── <txop_directory>/
-        ├── txop-trace-db-2-3-0.csv
-        ├── txop-trace-db-2-3-1.csv
-        ├── txop-trace-eb-2-3-0.csv
-        └── txop-trace-eb-2-3-1.csv
-```
+Different ns-3 random-number runs can be selected using the standard ns-3 `RngRun` parameter.
 
 For example:
 
-```text
-data/
-└── 8_15ipt/
-    ├── throughput.csv
-    └── txop_08_04/
-        ├── txop-trace-db-2-3-0.csv
-        ├── txop-trace-db-2-3-1.csv
-        ├── txop-trace-eb-2-3-0.csv
-        └── txop-trace-eb-2-3-1.csv
+```bash
+./ns3 run "scratch/ac-be-main --nDbWifi=2 --nEbWifi=3 --RngRun=2"
 ```
 
-The directory names identify the simulation configuration used to collect the results.
+## Simulation Output
 
-## TXOP Trace File Naming
+At the end of each simulation, the program prints the aggregate throughput of the DB and EB station groups:
 
-TXOP trace files use the following naming convention:
+```text
+Throughput BSS_DB: <value> Mbit/s
+Throughput BSS_EB: <value> Mbit/s
+```
+
+The throughput is calculated over the measurement interval beginning after:
+
+1. all stations have started transmitting,
+2. the configured warm-up period has elapsed.
+
+The scenario also generates separate TXOP trace files for DB and EB stations.
+
+## TXOP Trace Files
+
+TXOP traces use the following naming convention:
 
 ```text
 txop-trace-<station-type>-<nDB>-<nEB>-<rts>.csv
@@ -187,9 +129,9 @@ txop-trace-<station-type>-<nDB>-<nEB>-<rts>.csv
 
 where:
 
-* `<station-type>` identifies whether the trace contains measurements for DB or EB stations,
-* `<nDB>` is the number of DB stations in the scenario,
-* `<nEB>` is the number of EB stations in the scenario,
+* `<station-type>` is `db` or `eb`,
+* `<nDB>` is the number of DB stations,
+* `<nEB>` is the number of EB stations,
 * `<rts>` is `1` when RTS/CTS is enabled and `0` when it is disabled.
 
 For example:
@@ -198,13 +140,128 @@ For example:
 txop-trace-db-2-3-1.csv
 ```
 
-contains measurements for DB stations collected in a scenario with two DB stations, three EB stations, and RTS/CTS enabled.
+contains TXOP measurements for DB stations in a scenario with:
+
+* two DB stations,
+* three EB stations,
+* RTS/CTS enabled.
+
+Each row of a TXOP trace contains:
+
+```text
+simulation time, node identifier, TXOP start time, TXOP duration, failure status
+```
+
+The TXOP start times are used by the processing scripts to calculate the time between consecutive successful channel accesses.
+
+## Data
+
+The `data/` directory contains the simulation results used in the thesis.
+
+A typical directory structure is:
+
+```text
+data/
+└── <configuration>/
+    ├── throughput.csv
+    └── <txop-directory>/
+        ├── txop-trace-db-2-3-0.csv
+        ├── txop-trace-db-2-3-1.csv
+        ├── txop-trace-eb-2-3-0.csv
+        └── txop-trace-eb-2-3-1.csv
+```
+
+The configuration directory names identify the DB parameters or the set of experiments represented by the contained data.
+
+### `throughput.csv`
+
+Contains the throughput results collected for different combinations of:
+
+* DB stations,
+* EB stations,
+* total station count,
+* RTS/CTS configuration,
+* random-number run.
+
+The file is used by the throughput plotting scripts.
+
+### `txop-trace-*.csv`
+
+Contain the TXOP measurements collected during individual simulation runs.
+
+These files are used to calculate and present the distribution of channel access delay.
+
+## Data-Processing and Plotting Scripts
+
+### `throughput_vs_sta_fraction.py`
+
+Generates a multi-panel figure presenting average per-station throughput as a function of the proportion of DB and EB stations.
+
+The figure compares several total station counts, such as 5, 10, 20, and 40 stations. Results obtained with RTS/CTS enabled and disabled can be presented in the same figure.
+
+The input CSV path is specified directly in the script.
+
+### `single_count_throughput_vs_fraction.py`
+
+Generates a throughput figure for one selected total number of stations.
+
+The script is used to present a single network size separately. The selected number of stations is defined using the `TOTAL_STA` variable.
+
+### `ccdf_txop_latency.py`
+
+Generates a multi-panel complementary cumulative distribution function plot for channel access delay.
+
+Each panel represents a different combination of DB and EB stations. The script allows the delay distributions of both station types to be compared across several coexistence configurations.
+
+The following values are configured directly in the script:
+
+* input data directory,
+* total number of stations,
+* DB and EB station combinations,
+* horizontal-axis range,
+* RTS/CTS configuration.
+
+### `ccdf_single_config.py`
+
+Generates a channel access delay CCDF for one selected DB and EB station configuration.
+
+The script is used for a detailed presentation of a particular scenario. The selected station counts and input trace files are specified directly in the script.
+
+### `plot_config.py`
+
+Contains the common plotting settings used by the figure-generation scripts.
+
+The file defines elements such as:
+
+* figure dimensions,
+* font sizes,
+* markers,
+* line styles,
+* plot formatting.
+
+It is imported by the other Python scripts and should not be executed directly.
+
+## Python Requirements
+
+The data-processing scripts require Python 3 and the following packages:
+
+```text
+numpy
+pandas
+matplotlib
+```
+
+The required packages can be installed using:
+
+```bash
+python -m pip install numpy pandas matplotlib
+```
 
 ## Generating the Figures
 
-The input paths and scenario parameters are currently defined directly in the plotting scripts. Before running a script, the corresponding data path and configuration variables should be checked.
+Before running a plotting script, the input data path and scenario parameters defined at the beginning of the file should be checked.
 
-The scripts can be executed from the command line:
+The scripts can be executed using:
 
 ```bash
 python throughput_vs_sta_fraction.py
@@ -222,10 +279,10 @@ python ccdf_txop_latency.py
 python ccdf_single_config.py
 ```
 
-The generated figures are saved in the `results/` directory.
+The generated figures are saved in the `results/` directory in SVG format.
 
 ## Reproducibility
 
-The included datasets and Python scripts allow the figures presented in the thesis to be regenerated without rerunning the ns-3 simulations.
+The datasets and Python scripts included in the repository allow the figures presented in the thesis to be regenerated without rerunning the simulations.
 
-Full reproduction of the simulation experiments additionally requires the private ns-3 fork containing the Deterministic Backoff implementation.
+Full reproduction of the simulation experiments additionally requires access to the private ns-3 fork containing the Deterministic Backoff implementation.
