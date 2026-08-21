@@ -27,25 +27,25 @@ from plot_config import apply_plot_style, get_cmap, get_colors, SUBPLOT_WIDTH, S
 apply_plot_style()
 
 # Change the data source path here
-DATA_DIR = Path("../data/8_2ipt/txop")
+DATA_DIR = Path("../data/8_15ipt/txop_08_04")
 
 GAP_SECONDS = 1
 WARMUP_SECONDS = 30
 X_UNIT = "ms"
 # Manually adjust X_LIM based on your data scale
-X_LIM = (0, 2000)  # Limit for single station config
+X_LIM = (0, 7000)  # Limit for single station config
 
-N_DB = 0
-N_EB = 5
+N_DB = 24
+N_EB = 16
 # Tip: Comment/uncomment lines below to include/exclude RTS/CTS results
 # Remember: last digit in filename = 1 (RTS ON), 0 (RTS OFF)
 FILES = [
     # Uncomment to include DB RTS/CTS ON
-    #("txop-trace-db-5-0-1.csv", "DB, RTS ON"),
-    ("txop-trace-db-2-3-0.csv", "DB, RTS OFF"),
+    ("txop-trace-db-24-16-1.csv", "DB, RTS ON"),
+    ("txop-trace-db-24-16-0.csv", "DB, RTS OFF"),
     # Uncomment to include EB RTS/CTS ON and OFF
-    #("txop-trace-eb-5-0-1.csv", "EB, RTS ON"),
-    ("txop-trace-eb-2-3-0.csv", "EB, RTS OFF"),
+    ("txop-trace-eb-24-16-1.csv", "EB, RTS ON"),
+    ("txop-trace-eb-24-16-0.csv", "EB, RTS OFF"),
 ]
 
 output_file = f"results/ccdf_nDb{N_DB}_nEb{N_EB}.svg"
@@ -149,12 +149,12 @@ ax.xaxis.grid(False)
 ax.yaxis.grid(True, linewidth=0.9, alpha=0.6)
 
 # Set x-axis ticks every 200 ms
-ax.set_xticks(range(0, int(X_LIM[1]) + 1, 200))
-
+ax.tick_params(axis='x', which='major', labelsize=10)
+ax.set_title(f"{N_DB} DB, {N_EB} EB", fontsize=13)
 ax.set_yticks([1, 1e-1, 1e-2, 1e-3, 1e-4])
-ax.set_yticklabels(["P0", "P90", "P99", "P99.9", "P99.99"])
-ax.set_xlabel(f"Channel access delay [{X_UNIT}]")
-ax.set_ylabel("CCDF")
+ax.set_yticklabels(["P0", "P90", "P99", "P99.9", "P99.99"],fontsize=10)
+ax.set_xlabel(f"Channel access delay [{X_UNIT}]", fontsize=12)
+ax.set_ylabel("CCDF", fontsize=12)
 
 ax.legend(
     legend_handles.values(),
@@ -162,6 +162,7 @@ ax.legend(
     loc="best",
     ncol=1,
     frameon=True,
+    fontsize=10,
 )
 
 
