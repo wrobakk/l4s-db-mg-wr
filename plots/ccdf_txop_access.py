@@ -46,34 +46,35 @@ apply_plot_style()
 # Configuration
 # ============================================================
 
-DATA_DIR = Path("../data/vo_sta_eb/txop_access")
-OUTPUT_DIR = Path("results/txop_access/vo_sta_eb")
+SCRIPT_DIR = Path(__file__).resolve().parent
+DATA_DIR = SCRIPT_DIR.parent / "data/vi_sta_db/txop_access"
+OUTPUT_DIR = SCRIPT_DIR / "results/txop_access/vo_sta_eb"
 
 # Number of regular DB + EB stations.
 # The additional VO station is not included in this value.
-TOTAL_STA = 40
+TOTAL_STA = 5
 
 BASE_START_SECONDS = 0
 GAP_SECONDS = 1
 WARMUP_SECONDS = 20
 
 X_UNIT = "ms"
-X_LIM = (0, 400)
+X_LIM = (0, 100)
 
 # Label used for the additional station.
 # For the low-rate DB scenario, change this to "Low-rate DB".
-ADDITIONAL_STA_LABEL = "VO"
+ADDITIONAL_STA_LABEL = "VI"
 
 RTS_VALUES_TO_PLOT = [True, False]
 
-# configs = [
-#     (0, 5),
-#     (1, 4),
-#     (2, 3),
-#     (3, 2),
-#     (4, 1),
-#     (5, 0),
-# ]
+configs = [
+    (0, 5),
+    (1, 4),
+    (2, 3),
+    (3, 2),
+    (4, 1),
+    (5, 0),
+]
 
 # configs = [
 #     (0, 10),
@@ -93,14 +94,14 @@ RTS_VALUES_TO_PLOT = [True, False]
 #     (20, 0),
 # ]
 
-configs = [
-    (0, 40),
-    (8, 32),
-    (16, 24),
-    (24, 16),
-    (32, 8),
-    (40, 0),
-]
+# configs = [
+#     (0, 40),
+#     (8, 32),
+#     (16, 24),
+#     (24, 16),
+#     (32, 8),
+#     (40, 0),
+# ]
 
 
 # ============================================================
@@ -463,6 +464,8 @@ output_file = (
         f"ccdf_txop_access_{TOTAL_STA}sta.png"
     )
 )
+
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 fig.savefig(
     output_file,
